@@ -32,7 +32,7 @@ int Graphic::AddShape(std::vector<float> *positionBufferPtr, std::vector<unsigne
 	/* TODO: instead of simply appending this shape to the buffers, see if previous positions have already been used to 
 	try to minimize number of positions and indices used */
 
-	unsigned int offset = positionBufferPtr->size();
+	unsigned int offset = positionBufferPtr->size() / 2;	// Maybe this shouldn't be a magic number
 
 	positionBufferPtr->insert(positionBufferPtr->end(), shape.GetVertexPositions().begin(), shape.GetVertexPositions().end());
 	

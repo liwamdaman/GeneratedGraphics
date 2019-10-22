@@ -18,7 +18,7 @@ public:
 
 	const VertexArray& GetVertexArray() const;
 	const IndexBuffer& GetIndexBuffer() const;
-	Shader GetShader() const;
+	Shader GetShader() const; // Doesn't return const reference so that application code can directly set uniform
 
 protected:
 	int AddShape(std::vector<float> *positionBuffer, std::vector<unsigned int> * indexBuffer, Shape shape); // might need to be virtual

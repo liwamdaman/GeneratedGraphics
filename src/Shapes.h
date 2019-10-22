@@ -19,5 +19,5 @@ class Line : public Shape
 {
 public:
 	Line(float startX, float startY, float endX, float endY);
-	Line(float startX, float startY, float distFromStart, float angle, bool inRadians);
+	Line(float startX, float startY, float distFromStart, float angle, bool inRadians, float* endXPtr, float* endYPtr);
 };

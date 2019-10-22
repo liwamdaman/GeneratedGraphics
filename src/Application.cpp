@@ -28,7 +28,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(1920, 1080, "Look at dis shit", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -45,6 +45,7 @@ int main(void)
 
 	GLCall(std::cout << glGetString(GL_VERSION) << std::endl);
 	{
+		/* Test code */
 		//float positions[] = {
 		//	/*-0.5,	-0.5,
 		//	 0.5,	-0.5,
