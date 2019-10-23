@@ -36,7 +36,7 @@ int Graphic::AddShape(std::vector<float> *positionBufferPtr, std::vector<unsigne
 
 	positionBufferPtr->insert(positionBufferPtr->end(), shape.GetVertexPositions().begin(), shape.GetVertexPositions().end());
 	
-	for (int i = 0; i < shape.GetIndices().size(); i++) {
+	for (unsigned int i = 0; i < shape.GetIndices().size(); i++) {
 		indexBufferPtr->push_back(shape.GetIndices()[i] + offset);
 	}
 

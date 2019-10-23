@@ -1,11 +1,24 @@
 #include "FractalTree.h"
 #include "VertexBufferLayout.h"
 
-FractalTree::FractalTree()	// Default to depth of ten and 2 branches per parent
+FractalTree::FractalTree(unsigned int depth, unsigned int branchesPerNode)
 {
+	unsigned int numLines = pow(branchesPerNode, (depth - INITIAL_DEPTH_LEVEL - 1)) + 1;
+	if (numLines > MAX_LINES) {
+		// Reduce depth to be under threshold. Sub in MAX_LINES for numLines, solve for depth, and truncate to int
+		depth = (int)(log(MAX_LINES - 1) / log(branchesPerNode) + INITIAL_DEPTH_LEVEL + 1);
+	}
+
 	std::vector<float> positionBuffer;
 	std::vector<unsigned int> indexBuffer;
 
+	// Create tree
+	float* endXPtr = new float;
+	float* endYPtr = new float;
+	CreateBranches(INITIAL_DEPTH_LEVEL, depth, branchesPerNode, &positionBuffer, &indexBuffer, 
+					BASE_X_COORD, BASE_Y_COORD, MAIN_STEM_LENGTH, 90.0, endXPtr, endYPtr);
+
+	/* Test Code to hard code lines instead of creating tree*/
 	/*Line line = Line(0.0f, 0.0f, 0.0f, 0.5f);
 	AddShape(&positionBuffer, &indexBuffer, line);
 	Line line2 = Line(0.0f, 0.5f, 0.1f, 0.9f);
@@ -19,11 +32,6 @@ FractalTree::FractalTree()	// Default to depth of ten and 2 branches per parent
 	Line line5 = Line(-0.3f, 0.2f, 0.7f, 300.0f, false, endXPtr, endYPtr);
 	AddShape(&positionBuffer, &indexBuffer, line5);*/
 
-	// Create tree
-	float* endXPtr = new float;
-	float* endYPtr = new float;
-	CreateBranches(DEFAULT_DEPTH, 0, &positionBuffer, &indexBuffer, 0.0, -0.5, MAIN_STEM_LENGTH, 90.0, endXPtr, endYPtr);
-
 	// Create VertexBuffer, VertexArray, IndexBuffer, Shader
 	m_VbPtr = new VertexBuffer(&positionBuffer[0], positionBuffer.size() * sizeof(float));
 	VertexBufferLayout layout;
@@ -34,44 +42,13 @@ FractalTree::FractalTree()	// Default to depth of ten and 2 branches per parent
 	m_ShaderPtr = new Shader("res/shaders/Basic.shader");
 	m_ShaderPtr->Bind();
 	m_ShaderPtr->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
-
-	/* Test code */
-	//float positions[] = {
-	//	/*-0.5,	-0.5,
-	//	 0.5,	-0.5,
-	//	 0.5,	 0.5,
-	//	-0.5,	 0.5,*/
-	//	0.0,	0.0,
-	//	0.01,	0.01,
-	//	0.51,	0.01,
-	//	0.5,	0.0
-	//};
-
-	//unsigned int indices[] = {
-	//	0, 1, 2,
-	//	2, 3, 0
-	//};
-
-	//m_Va = new VertexArray();
-	//m_Vb = new VertexBuffer(positions, 4 * 2 * sizeof(float));
-
-	//VertexBufferLayout layout;
-	//layout.Push<float>(2);
-	//m_Va->AddBuffer(*m_Vb, layout);
-
-	//m_Ib = new IndexBuffer(indices, 6);
-
-	//m_Shader = new Shader("res/shaders/Basic.shader");
-	//m_Shader->Bind();
-	//m_Shader->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
-	//std::cout << m_Shader->m_RendererID << std::endl;
 }
 
-FractalTree::FractalTree(unsigned int depth, unsigned int branchNum)
+FractalTree::FractalTree() : FractalTree(DEFAULT_DEPTH, DEFAULT_BRANCHES_PER_NODE)	// Default to depth of ten and 2 branches per parent
 {
 }
 
-void FractalTree::CreateBranches(unsigned int maxDepth, unsigned int currDepth, 
+void FractalTree::CreateBranches(unsigned int currDepth, unsigned int maxDepth, unsigned int branchesPerNode,
 									std::vector<float>* positionBuffer, std::vector<unsigned int>* indexBuffer, 
 									float startX, float startY, float distFromStart, float angle,
 									float *endXPtr, float *endYPtr)
@@ -85,8 +62,10 @@ void FractalTree::CreateBranches(unsigned int maxDepth, unsigned int currDepth,
 
 	float nextStartX = *endXPtr;
 	float nextStartY = *endYPtr;
-	CreateBranches(maxDepth, currDepth, positionBuffer, indexBuffer, nextStartX, nextStartY, 
-		distFromStart * STEM_LENGTH_SHRINK_RATE, angle + BRANCH_SPREAD_ANGLE, endXPtr, endYPtr);
-	CreateBranches(maxDepth, currDepth, positionBuffer, indexBuffer, nextStartX, nextStartY, 
-		distFromStart * STEM_LENGTH_SHRINK_RATE, angle - BRANCH_SPREAD_ANGLE, endXPtr, endYPtr);
+
+	for (unsigned int i = 0; i < branchesPerNode; i++) {
+		CreateBranches(currDepth, maxDepth, branchesPerNode, positionBuffer, indexBuffer, nextStartX, nextStartY,
+			distFromStart * STEM_LENGTH_SHRINK_RATE, angle - TOTAL_SPREAD_ANGLE/2 + i*TOTAL_SPREAD_ANGLE/(branchesPerNode-1),
+			endXPtr, endYPtr);
+	}
 }

@@ -75,27 +75,19 @@ int main(void)
 		//shader.Bind();
 		//shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
-		/*va.Unbind();
-		vb.Unbind();
-		ib.Unbind();
-		shader.Unbind();*/
-
 		Renderer renderer;
 
-		// The goal:
-		FractalTree fTree = FractalTree();
+		//FractalTree fTree = FractalTree();
+		FractalTree fTree = FractalTree(10, 2);
 
 		float r = 0.0f;
 		float increment = 0.05f;
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
-			//std::cout << fTree.m_Shader->m_RendererID << std::endl;
 			/* Render here */
 			renderer.Clear();
 
-			/*shader.Bind();
-			shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);*/
 			//renderer.Draw(va, ib, shader);
 
 			fTree.GetShader().Bind();
@@ -119,8 +111,4 @@ int main(void)
 
 	glfwTerminate();
 	return 0;
-}
-
-void BasicSetup() {
-
 }
