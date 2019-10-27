@@ -40,5 +40,5 @@ int Graphic::AddShape(std::vector<float> *positionBufferPtr, std::vector<unsigne
 		indexBufferPtr->push_back(shape.GetIndices()[i] + offset);
 	}
 
-	return 0;
+	return 0;	// TODO: add exception handling and use other return values
 }

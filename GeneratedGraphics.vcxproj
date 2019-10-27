@@ -23,6 +23,7 @@
     <ClCompile Include="src\FractalTree.cpp" />
     <ClCompile Include="src\Graphic.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\Maze.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Shapes.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="src\FractalTree.h" />
     <ClInclude Include="src\Graphic.h" />
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Maze.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Shapes.h" />

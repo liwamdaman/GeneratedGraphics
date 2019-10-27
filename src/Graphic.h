@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "Shapes.h"
 
-
+// Parent class for different graphic types, use Renderer to draw Graphics to screen
 class Graphic
 {
 protected:
@@ -22,5 +22,5 @@ public:
 
 protected:
 	int AddShape(std::vector<float> *positionBuffer, std::vector<unsigned int> * indexBuffer, Shape shape); // might need to be virtual
-
+	
 };
