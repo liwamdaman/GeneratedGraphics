@@ -29,8 +29,6 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 void Renderer::Draw(Graphic *graphic) const
 {
 	graphic->GetShader().Bind();
-	//graphic.GetVertexArray().Bind();
-	//graphic.GetIndexBuffer().Bind();
 	graphic->GetVertexArray().Bind();
 	graphic->GetIndexBuffer().Bind();
 

@@ -28,7 +28,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(1920, 1080, "Look at dis shit", NULL, NULL);
+	window = glfwCreateWindow(DEFAULT_NATIVE_RESOLUTION_WIDTH, DEFAULT_NATIVE_RESOLUTION_HEIGHT, "Look at dis shit", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -77,8 +77,8 @@ int main(void)
 
 		Renderer renderer;
 
-		//FractalTree fTree = FractalTree();
 		FractalTree fTree = FractalTree(10, 2);
+		//Maze maze = Maze();
 
 		float r = 0.0f;
 		float increment = 0.05f;
@@ -89,6 +89,11 @@ int main(void)
 			renderer.Clear();
 
 			//renderer.Draw(va, ib, shader);
+
+			// The Goal:
+			/*wait for some input or automatically start on first loop
+			maze.iterate();
+			renderer.Draw(&maze);*/
 
 			fTree.GetShader().Bind();
 			fTree.GetShader().SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);

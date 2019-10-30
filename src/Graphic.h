@@ -5,6 +5,9 @@
 #include "Shader.h"
 #include "Shapes.h"
 
+#define DEFAULT_NATIVE_RESOLUTION_WIDTH 1920
+#define DEFAULT_NATIVE_RESOLUTION_HEIGHT 1080
+
 // Parent class for different graphic types, use Renderer to draw Graphics to screen
 class Graphic
 {
@@ -22,5 +25,5 @@ public:
 
 protected:
 	int AddShape(std::vector<float> *positionBuffer, std::vector<unsigned int> * indexBuffer, Shape shape); // might need to be virtual
-	
+	virtual void SetupGrid(unsigned int height, unsigned int width) = 0;
 };

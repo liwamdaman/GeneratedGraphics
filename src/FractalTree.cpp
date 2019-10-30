@@ -18,20 +18,6 @@ FractalTree::FractalTree(unsigned int depth, unsigned int branchesPerNode)
 	CreateBranches(INITIAL_DEPTH_LEVEL, depth, branchesPerNode, &positionBuffer, &indexBuffer, 
 					BASE_X_COORD, BASE_Y_COORD, MAIN_STEM_LENGTH, 90.0, endXPtr, endYPtr);
 
-	/* Test Code to hard code lines instead of creating tree*/
-	/*Line line = Line(0.0f, 0.0f, 0.0f, 0.5f);
-	AddShape(&positionBuffer, &indexBuffer, line);
-	Line line2 = Line(0.0f, 0.5f, 0.1f, 0.9f);
-	AddShape(&positionBuffer, &indexBuffer, line2);
-	Line line3 = Line(0.0f, 0.5f, -0.1f, 0.9f);
-	AddShape(&positionBuffer, &indexBuffer, line3);
-	float* endXPtr = new float;
-	float* endYPtr = new float;
-	Line line4 = Line(0.0f, 0.0f, 0.5f, 0.4f, true, endXPtr, endYPtr);
-	AddShape(&positionBuffer, &indexBuffer, line4);
-	Line line5 = Line(-0.3f, 0.2f, 0.7f, 300.0f, false, endXPtr, endYPtr);
-	AddShape(&positionBuffer, &indexBuffer, line5);*/
-
 	// Create VertexBuffer, VertexArray, IndexBuffer, Shader
 	m_VbPtr = new VertexBuffer(&positionBuffer[0], positionBuffer.size() * sizeof(float));
 	VertexBufferLayout layout;
@@ -68,4 +54,24 @@ void FractalTree::CreateBranches(unsigned int currDepth, unsigned int maxDepth, 
 			distFromStart * STEM_LENGTH_SHRINK_RATE, angle - TOTAL_SPREAD_ANGLE/2 + i*TOTAL_SPREAD_ANGLE/(branchesPerNode-1),
 			endXPtr, endYPtr);
 	}
+
+	/* Test Code to hard code lines instead of creating tree*/
+	/*Line line = Line(0.0f, 0.0f, 0.0f, 0.5f);
+	AddShape(&positionBuffer, &indexBuffer, line);
+	Line line2 = Line(0.0f, 0.5f, 0.1f, 0.9f);
+	AddShape(&positionBuffer, &indexBuffer, line2);
+	Line line3 = Line(0.0f, 0.5f, -0.1f, 0.9f);
+	AddShape(&positionBuffer, &indexBuffer, line3);
+	float* endXPtr = new float;
+	float* endYPtr = new float;
+	Line line4 = Line(0.0f, 0.0f, 0.5f, 0.4f, true, endXPtr, endYPtr);
+	AddShape(&positionBuffer, &indexBuffer, line4);
+	Line line5 = Line(-0.3f, 0.2f, 0.7f, 300.0f, false, endXPtr, endYPtr);
+	AddShape(&positionBuffer, &indexBuffer, line5);*/
+}
+
+void FractalTree::SetupGrid(unsigned int height, unsigned int width)
+{
+	printf("please don't call this lol, not supported for FractalTree type\n");
+	// Perhaps SetUpGrid shouldn't be a base virtual function if not all derived class implement it
 }

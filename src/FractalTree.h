@@ -24,4 +24,5 @@ public:
 						std::vector<float>* positionBuffer, std::vector<unsigned int>* indexBuffer,
 						float startX, float startY, float distFromStart, float angle,
 						float* endXPtr, float* endYPtr);
+	void SetupGrid(unsigned int height, unsigned int width);
 };
