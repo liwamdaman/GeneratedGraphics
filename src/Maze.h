@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphic.h"
+#include "VertexBufferLayout.h"
 #include <string>
 #include <stack>
 
@@ -26,11 +27,13 @@ private:
 		Its ugly that these need to be class members whereas they are just locally created in FractalTree constructor, consider refactor */
 	std::vector<float> m_PositionBuffer;
 	std::vector<unsigned int> m_IndexBuffer;
+	VertexBufferLayout m_Layout;
 public:
 	Maze(unsigned int width, unsigned int height, unsigned int startX, unsigned int startY);
 	Maze();
+
+	void Iterate();	// Finds next node, and updates buffers
 private:
 	void SetupGrid(unsigned int width, unsigned int height);
-	void Iterate();	// Finds next node, and updates buffers
 	Node* FindNextNode(Node* currNode);
 };

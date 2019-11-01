@@ -71,8 +71,8 @@ Polygon::Polygon(std::vector<std::pair<float, float>> vertices)	// Maybe should 
 		}		
 		case 4:
 		{
-			unsigned int rectIndices[4] = { 0, 1, 2, 3 };
-			m_Indices.insert(m_Indices.end(), rectIndices, rectIndices + 4);
+			unsigned int rectIndices[6] = { 0, 1, 2, 2, 3, 0 };
+			m_Indices.insert(m_Indices.end(), rectIndices, rectIndices + 6);
 			break;
 		}
 	}

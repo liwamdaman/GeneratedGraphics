@@ -14,6 +14,7 @@
 #include "Shader.h"
 
 #include "FractalTree.h"
+#include "Maze.h"
 
 int main(void)
 {
@@ -77,8 +78,8 @@ int main(void)
 
 		Renderer renderer;
 
-		FractalTree fTree = FractalTree(10, 2);
-		//Maze maze = Maze();
+		//FractalTree fTree = FractalTree(10, 2);
+		Maze maze = Maze(3,2,0,0);
 
 		float r = 0.0f;
 		float increment = 0.05f;
@@ -91,13 +92,13 @@ int main(void)
 			//renderer.Draw(va, ib, shader);
 
 			// The Goal:
-			/*wait for some input or automatically start on first loop
-			maze.iterate();
-			renderer.Draw(&maze);*/
+			//wait for some input or automatically start on first loop
+			maze.Iterate();
+			renderer.Draw(&maze);
 
-			fTree.GetShader().Bind();
-			fTree.GetShader().SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-			renderer.Draw(&fTree);
+			//fTree.GetShader().Bind();
+			//fTree.GetShader().SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+			//renderer.Draw(&fTree);
 
 			if (r > 1.0f)
 				increment = -0.05f;
@@ -105,6 +106,8 @@ int main(void)
 				increment = 0.05f;
 
 			r += increment;
+
+			std::cin.ignore();
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
