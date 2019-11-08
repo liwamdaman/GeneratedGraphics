@@ -5,8 +5,8 @@
 #include "Shader.h"
 #include "Shapes.h"
 
-#define DEFAULT_NATIVE_RESOLUTION_WIDTH 1920
-#define DEFAULT_NATIVE_RESOLUTION_HEIGHT 1080
+#define DEFAULT_NATIVE_RESOLUTION_WIDTH		1920
+#define DEFAULT_NATIVE_RESOLUTION_HEIGHT	1080
 
 // Parent class for different graphic types, use Renderer to draw Graphics to screen
 class Graphic
@@ -24,6 +24,7 @@ public:
 	Shader GetShader() const; // Doesn't return const reference so that application code can directly set uniform
 
 protected:
-	int AddShape(std::vector<float> *positionBuffer, std::vector<unsigned int> * indexBuffer, Shape shape); // might need to be virtual
+	int AddShape(std::vector<float> *positionBuffer, std::vector<unsigned int> * indexBuffer, Shape shape) const; // might need to be virtual
 	virtual void SetupGrid(unsigned int height, unsigned int width) = 0;
+	float MapPixelCoordToScreenCoord(unsigned int pixelCoord, bool isXCoord) const;
 };

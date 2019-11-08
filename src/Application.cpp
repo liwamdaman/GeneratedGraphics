@@ -48,14 +48,14 @@ int main(void)
 	{
 		/* Test code */
 		//float positions[] = {
-		//	/*-0.5,	-0.5,
-		//	 0.5,	-0.5,
-		//	 0.5,	 0.5,
-		//	-0.5,	 0.5,*/
-		//	0.0,	0.0,
+		//	-1,	-1,
+		//	 1,	-1,
+		//	 1,	 1,
+		//	-1,	 1,
+		//	/*0.0,	0.0,
 		//	0.01,	0.01,
 		//	0.51,	0.01,
-		//	0.5,	0.0
+		//	0.5,	0.0*/
 		//};
 
 		//unsigned int indices[] = {
@@ -79,7 +79,7 @@ int main(void)
 		Renderer renderer;
 
 		//FractalTree fTree = FractalTree(10, 2);
-		Maze maze = Maze(3,2,0,0);
+		Maze maze = Maze(16,9,0,0);
 
 		float r = 0.0f;
 		float increment = 0.05f;
@@ -107,13 +107,13 @@ int main(void)
 
 			r += increment;
 
-			std::cin.ignore();
-
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
 
 			/* Poll for and process events */
 			glfwPollEvents();
+
+			//std::cin.ignore();
 		}
 	}
 

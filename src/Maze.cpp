@@ -1,4 +1,6 @@
 #include "Maze.h"
+#include <iostream>
+
 
 Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigned int startY)
 {
@@ -27,7 +29,6 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 	m_Nodes = (Node*)malloc(width * height * sizeof(Node)); // Ignore this red underline, I think its a VS bug:https://github.com/Microsoft/vscode-cpptools/issues/3212
 	if (m_Nodes == NULL) printf("Uh oh");
 
-	int count = 0;
 	Node* n;
 	for (unsigned int i = 0; i < height; i++) {
 		for (unsigned int j = 0; j < width; j++) {
@@ -36,9 +37,6 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 			n->y = i;
 			n->type = 0;
 			n->dirs = 15;
-
-			printf("%d\n",count);
-			count++;
 		}
 	}
 }
@@ -55,16 +53,18 @@ void Maze::Iterate()
 			
 			/* build rectangle at this node and add to positionBuffer */
 			std::vector<std::pair<float, float>> rectVertices;
-			std::pair<float, float> botLeft(i * nodeWidth, j * nodeHeight);
-			std::pair<float, float> botRight(i * nodeWidth + nodeWidth, j * nodeHeight);
-			std::pair<float, float> topRight(i * nodeWidth + nodeWidth, j * nodeHeight + nodeHeight);
-			std::pair<float, float> topLeft(i * nodeWidth, j * nodeHeight + nodeHeight);
+			std::pair<float, float> botLeft(MapPixelCoordToScreenCoord(j * nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight, false));
+			std::pair<float, float> botRight(MapPixelCoordToScreenCoord(j * nodeWidth + nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight, false));
+			std::pair<float, float> topRight(MapPixelCoordToScreenCoord(j * nodeWidth + nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight + nodeHeight, false));
+			std::pair<float, float> topLeft(MapPixelCoordToScreenCoord(j * nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight + nodeHeight, false));
 			rectVertices.push_back(botLeft);
 			rectVertices.push_back(botRight);
 			rectVertices.push_back(topRight);
 			rectVertices.push_back(topLeft);
 			Polygon rectangle(rectVertices);
 			AddShape(&m_PositionBuffer, &m_IndexBuffer, rectangle);
+			//std::cout << i * nodeWidth << std::endl;
+			//std::cout << topRight.first << std::endl;
 		}
 	}
 

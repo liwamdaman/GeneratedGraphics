@@ -25,7 +25,7 @@ Shader Graphic::GetShader() const
 	return *(this->m_ShaderPtr);
 }
 
-int Graphic::AddShape(std::vector<float> *positionBufferPtr, std::vector<unsigned int> *indexBufferPtr, Shape shape)
+int Graphic::AddShape(std::vector<float> *positionBufferPtr, std::vector<unsigned int> *indexBufferPtr, Shape shape) const
 {
 	// Implement some max size possibly? so that we can't infinitely add shapes and increase the size of positionBuffer
 
@@ -41,4 +41,13 @@ int Graphic::AddShape(std::vector<float> *positionBufferPtr, std::vector<unsigne
 	}
 
 	return 0;	// TODO: add exception handling and use other return values
+}
+
+float Graphic::MapPixelCoordToScreenCoord(unsigned int pixelCoord, bool isXCoord) const
+{
+	/* From observation, OpenGL screen goes from -1 to 1 in both x and y directions */
+	if (isXCoord)
+		return (float)pixelCoord * 2 / DEFAULT_NATIVE_RESOLUTION_WIDTH - 1;
+	else
+		return (float)pixelCoord * 2 / DEFAULT_NATIVE_RESOLUTION_HEIGHT - 1;
 }
