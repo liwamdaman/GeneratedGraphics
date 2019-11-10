@@ -35,7 +35,7 @@ FractalTree::FractalTree() : FractalTree(DEFAULT_DEPTH, DEFAULT_BRANCHES_PER_NOD
 }
 
 void FractalTree::CreateBranches(unsigned int currDepth, unsigned int maxDepth, unsigned int branchesPerNode,
-									std::vector<float>* positionBuffer, std::vector<unsigned int>* indexBuffer, 
+									std::vector<float>* vertexDataBufferPtr, std::vector<unsigned int>* indexBuffer,
 									float startX, float startY, float distFromStart, float angle,
 									float *endXPtr, float *endYPtr)
 {
@@ -44,13 +44,13 @@ void FractalTree::CreateBranches(unsigned int currDepth, unsigned int maxDepth, 
 	currDepth++;
 
 	Line line = Line(startX, startY, distFromStart, angle, false, endXPtr, endYPtr);	// TODO: maybe implement support for using radians?
-	AddShape(positionBuffer, indexBuffer, line);
+	AddShape(vertexDataBufferPtr, indexBuffer, line, false);
 
 	float nextStartX = *endXPtr;
 	float nextStartY = *endYPtr;
 
 	for (unsigned int i = 0; i < branchesPerNode; i++) {
-		CreateBranches(currDepth, maxDepth, branchesPerNode, positionBuffer, indexBuffer, nextStartX, nextStartY,
+		CreateBranches(currDepth, maxDepth, branchesPerNode, vertexDataBufferPtr, indexBuffer, nextStartX, nextStartY,
 			distFromStart * STEM_LENGTH_SHRINK_RATE, angle - TOTAL_SPREAD_ANGLE/2 + i*TOTAL_SPREAD_ANGLE/(branchesPerNode-1),
 			endXPtr, endYPtr);
 	}

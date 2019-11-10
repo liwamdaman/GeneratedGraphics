@@ -2,13 +2,18 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 class Shape
 {
 protected:
+	/* Constants */
+	static const int colourVectorLength = 4;
+	const std::array<float, colourVectorLength> defaultColour = { 1.0, 0.0, 0.0, 1.0 };	// Red
+
 	std::vector <float> m_VertexPositions;
 	std::vector <unsigned int> m_Indices;
-	std::string m_colour; // TODO: implement this - map colour strings to RGBA colour vectors and then make it possible to use those in a shader
+	float m_Colour[colourVectorLength]; // RGBA value	
 
 public:
 	const std::vector<float>& GetVertexPositions() const;
@@ -25,5 +30,6 @@ public:
 class Polygon : public Shape
 {
 public:
+	Polygon(std::vector<std::pair<float, float>> vertices, std::array <float, 4> RGBA);
 	Polygon(std::vector<std::pair<float, float>> vertices);
 };

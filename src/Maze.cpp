@@ -16,7 +16,8 @@ Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigne
 	// Setup start point/node
 	Node* startNode = m_Nodes + (startY * height + startX) * sizeof(Node);
 
-	m_Layout.Push<float>(2);
+	m_Layout.Push<float>(2);	// x and y position
+	//m_Layout.Push<float>(4);	// RGBA colour value
 
 }
 
@@ -33,9 +34,12 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 	for (unsigned int i = 0; i < height; i++) {
 		for (unsigned int j = 0; j < width; j++) {
 			n = m_Nodes + i * width + j;	// Iterate row by row, increasing in height
-			n->x = j;
-			n->y = i;
-			n->type = 0;
+			n->xIndex = j;
+			n->yIndex = i;
+			if (j % 2 == 0)
+				n->type = 0;
+			else
+				n->type = 1;
 			n->dirs = 15;
 		}
 	}
@@ -62,14 +66,14 @@ void Maze::Iterate()
 			rectVertices.push_back(topRight);
 			rectVertices.push_back(topLeft);
 			Polygon rectangle(rectVertices);
-			AddShape(&m_PositionBuffer, &m_IndexBuffer, rectangle);
+			AddShape(&m_VertexDataBuffer, &m_IndexBuffer, rectangle, true);
 			//std::cout << i * nodeWidth << std::endl;
 			//std::cout << topRight.first << std::endl;
 		}
 	}
 
 	/* Reassign buffers */
-	m_VbPtr = new VertexBuffer(&m_PositionBuffer[0], m_PositionBuffer.size() * sizeof(float));
+	m_VbPtr = new VertexBuffer(&m_VertexDataBuffer[0], m_VertexDataBuffer.size() * sizeof(float));
 	m_VaPtr = new VertexArray();
 	m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
 	m_IbPtr = new IndexBuffer(&m_IndexBuffer[0], m_IndexBuffer.size());

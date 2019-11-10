@@ -24,7 +24,7 @@ public:
 	Shader GetShader() const; // Doesn't return const reference so that application code can directly set uniform
 
 protected:
-	int AddShape(std::vector<float> *positionBuffer, std::vector<unsigned int> * indexBuffer, Shape shape) const; // might need to be virtual
+	int AddShape(std::vector<float> *vertexDataBufferPtr, std::vector<unsigned int> * indexBufferPtr, Shape shape, bool addColour) const; // might need to be virtual
 	virtual void SetupGrid(unsigned int height, unsigned int width) = 0;
 	float MapPixelCoordToScreenCoord(unsigned int pixelCoord, bool isXCoord) const;
 };

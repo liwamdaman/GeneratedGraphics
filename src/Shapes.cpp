@@ -52,10 +52,14 @@ Line::Line(float startX, float startY, float distFromStart, float angle, bool in
 	m_Indices.insert(m_Indices.end(), indices, indices + 6);
 }
 
-Polygon::Polygon(std::vector<std::pair<float, float>> vertices)	// Maybe should use a struct instead of a pair
+Polygon::Polygon(std::vector<std::pair<float, float>> vertices, std::array <float, colourVectorLength> RGBA)	// Maybe should use a struct instead of a pair
 {
 	if (vertices.size() < 3) printf("Error, cannot initialize polygon with less than 3 vertices\n");
 	else if (vertices.size() > 10) printf("Error, max vertices limit hit for polygon\n");
+
+	/*for (int i = 0; i < colourVectorLength; i++) {
+		m_Colour[i] = RGBA[i];
+	}*/
 
 	for (int i = 0; i < vertices.size(); i++) {
 		m_VertexPositions.push_back(vertices[i].first);
@@ -68,7 +72,7 @@ Polygon::Polygon(std::vector<std::pair<float, float>> vertices)	// Maybe should 
 			unsigned int triangleIndices[3] = { 0, 1, 2 };
 			m_Indices.insert(m_Indices.end(), triangleIndices, triangleIndices + 3);
 			break;
-		}		
+		}
 		case 4:
 		{
 			unsigned int rectIndices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -76,4 +80,8 @@ Polygon::Polygon(std::vector<std::pair<float, float>> vertices)	// Maybe should 
 			break;
 		}
 	}
+}
+
+Polygon::Polygon(std::vector<std::pair<float, float>> vertices) : Polygon(vertices, defaultColour)
+{
 }

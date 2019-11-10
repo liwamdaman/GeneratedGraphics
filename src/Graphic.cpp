@@ -25,16 +25,16 @@ Shader Graphic::GetShader() const
 	return *(this->m_ShaderPtr);
 }
 
-int Graphic::AddShape(std::vector<float> *positionBufferPtr, std::vector<unsigned int> *indexBufferPtr, Shape shape) const
+int Graphic::AddShape(std::vector<float> * vertexDataBufferPtr, std::vector<unsigned int> *indexBufferPtr, Shape shape, bool addColour) const
 {
 	// Implement some max size possibly? so that we can't infinitely add shapes and increase the size of positionBuffer
 
 	/* TODO: instead of simply appending this shape to the buffers, see if previous positions have already been used to 
 	try to minimize number of positions and indices used */
 
-	unsigned int offset = positionBufferPtr->size() / 2;	// Maybe this shouldn't be a magic number
+	unsigned int offset = vertexDataBufferPtr->size() / 2;	// Maybe this shouldn't be a magic number
 
-	positionBufferPtr->insert(positionBufferPtr->end(), shape.GetVertexPositions().begin(), shape.GetVertexPositions().end());
+	vertexDataBufferPtr->insert(vertexDataBufferPtr->end(), shape.GetVertexPositions().begin(), shape.GetVertexPositions().end());
 	
 	for (unsigned int i = 0; i < shape.GetIndices().size(); i++) {
 		indexBufferPtr->push_back(shape.GetIndices()[i] + offset);

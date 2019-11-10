@@ -21,7 +21,7 @@ public:
 	FractalTree(unsigned int depth, unsigned int branchesPerNode);
 	FractalTree(); // Default to depth of ten and 2 branches per parent
 	void CreateBranches(unsigned int depth, unsigned int currDepth, unsigned int branchesPerNode,
-						std::vector<float>* positionBuffer, std::vector<unsigned int>* indexBuffer,
+						std::vector<float>* vertexDataBufferPtr, std::vector<unsigned int>* indexBufferPtr,
 						float startX, float startY, float distFromStart, float angle,
 						float* endXPtr, float* endYPtr);
 	void SetupGrid(unsigned int height, unsigned int width);
