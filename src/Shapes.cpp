@@ -57,11 +57,11 @@ Polygon::Polygon(std::vector<std::pair<float, float>> vertices, std::array <floa
 	if (vertices.size() < 3) printf("Error, cannot initialize polygon with less than 3 vertices\n");
 	else if (vertices.size() > 10) printf("Error, max vertices limit hit for polygon\n");
 
-	/*for (int i = 0; i < colourVectorLength; i++) {
+	for (int i = 0; i < colourVectorLength; i++) {
 		m_Colour[i] = RGBA[i];
-	}*/
+	}
 
-	for (int i = 0; i < vertices.size(); i++) {
+	for (unsigned int i = 0; i < vertices.size(); i++) {
 		m_VertexPositions.push_back(vertices[i].first);
 		m_VertexPositions.push_back(vertices[i].second);
 	}
@@ -82,6 +82,6 @@ Polygon::Polygon(std::vector<std::pair<float, float>> vertices, std::array <floa
 	}
 }
 
-Polygon::Polygon(std::vector<std::pair<float, float>> vertices) : Polygon(vertices, defaultColour)
+Polygon::Polygon(std::vector<std::pair<float, float>> vertices) : Polygon(vertices, DEFAULT_COLOUR)
 {
 }

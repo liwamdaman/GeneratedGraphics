@@ -32,13 +32,29 @@ int Graphic::AddShape(std::vector<float> * vertexDataBufferPtr, std::vector<unsi
 	/* TODO: instead of simply appending this shape to the buffers, see if previous positions have already been used to 
 	try to minimize number of positions and indices used */
 
-	unsigned int offset = vertexDataBufferPtr->size() / 2;	// Maybe this shouldn't be a magic number
+	unsigned int offset = 0;
+	if (addColour) {
+		// Assume that all the data in buffer currently is two floats for position and four floats for colour per vertex
+		offset = vertexDataBufferPtr->size() / 6;
 
-	vertexDataBufferPtr->insert(vertexDataBufferPtr->end(), shape.GetVertexPositions().begin(), shape.GetVertexPositions().end());
-	
+		for (unsigned int i = 0; i < shape.GetVertexPositions().size(); i = i + 2) {
+			vertexDataBufferPtr->push_back(shape.GetVertexPositions()[i]);
+			vertexDataBufferPtr->push_back(shape.GetVertexPositions()[i+1]);
+			for (unsigned int j = 0; j < shape.colourVectorLength; j++) {
+				vertexDataBufferPtr->push_back(shape.m_Colour[j]);
+			}
+		}
+	}
+	else {
+		offset = vertexDataBufferPtr->size() / 2;
+
+		vertexDataBufferPtr->insert(vertexDataBufferPtr->end(), shape.GetVertexPositions().begin(), shape.GetVertexPositions().end());
+	}
+
 	for (unsigned int i = 0; i < shape.GetIndices().size(); i++) {
 		indexBufferPtr->push_back(shape.GetIndices()[i] + offset);
 	}
+
 
 	return 0;	// TODO: add exception handling and use other return values
 }

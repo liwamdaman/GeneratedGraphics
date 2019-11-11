@@ -1,20 +1,22 @@
 #shader vertex
 #version 330 core
 
-layout(location = 0) in vec4 position;	// the position variable has attribute position 0
+layout(location = 0) in vec2 position;	// the position variable has attribute position 0
 layout(location = 1) in vec4 color;		// the colour variable has attribute position 1
 
-out vec3 ourColor; // output a colour to the fragment shader
+out vec4 ourColor; // output a colour to the fragment shader
 
 void main()
 {
-	gl_Position = position;
+	gl_Position = vec4(position, 0.0, 1.0);
 	ourColor = color;
+	//ourColor = vec4(0.8f, 0.3f, 0.8f, 1.0f);
 };
 
 #shader fragment
 #version 330 core
 
+//layout(location = 0) out vec4 fragColor;
 out vec4 fragColor;
 in vec4 ourColor;
 

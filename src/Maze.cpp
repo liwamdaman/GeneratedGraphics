@@ -17,7 +17,7 @@ Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigne
 	Node* startNode = m_Nodes + (startY * height + startX) * sizeof(Node);
 
 	m_Layout.Push<float>(2);	// x and y position
-	//m_Layout.Push<float>(4);	// RGBA colour value
+	m_Layout.Push<float>(4);	// RGBA colour value
 
 }
 
@@ -77,9 +77,9 @@ void Maze::Iterate()
 	m_VaPtr = new VertexArray();
 	m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
 	m_IbPtr = new IndexBuffer(&m_IndexBuffer[0], m_IndexBuffer.size());
-	m_ShaderPtr = new Shader("res/shaders/Basic.shader");
+	m_ShaderPtr = new Shader("res/shaders/Maze.shader");
 	m_ShaderPtr->Bind();
-	m_ShaderPtr->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+	//m_ShaderPtr->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 }
 
 Maze::Node* Maze::FindNextNode(Node* currNode)

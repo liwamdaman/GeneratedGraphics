@@ -4,18 +4,21 @@
 #include <vector>
 #include <array>
 
+#define DEFAULT_COLOUR { 1.0f, 0.1f, 0.1f, 1.0f }	// Red
+
 class Shape
 {
-protected:
+public:
 	/* Constants */
-	static const int colourVectorLength = 4;
-	const std::array<float, colourVectorLength> defaultColour = { 1.0, 0.0, 0.0, 1.0 };	// Red
+	static const unsigned int colourVectorLength = 4;
 
+protected:
 	std::vector <float> m_VertexPositions;
 	std::vector <unsigned int> m_Indices;
-	float m_Colour[colourVectorLength]; // RGBA value	
 
 public:
+	float m_Colour[colourVectorLength]; // RGBA value	
+
 	const std::vector<float>& GetVertexPositions() const;
 	const std::vector<unsigned int>& GetIndices() const;
 };
