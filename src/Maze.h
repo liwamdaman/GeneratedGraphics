@@ -25,8 +25,8 @@ private:
 
 	/* To store the actual vertex data that OpenGl needs from iteration to iteration 
 		Its ugly that these need to be class members whereas they are just locally created in FractalTree constructor, consider refactor */
-	std::vector<float> m_VertexDataBuffer;
-	std::vector<unsigned int> m_IndexBuffer;
+	//std::vector<float> m_VertexDataBuffer;
+	//std::vector<unsigned int> m_IndexBuffer;
 	VertexBufferLayout m_Layout;
 public:
 	Maze(unsigned int width, unsigned int height, unsigned int startX, unsigned int startY);

@@ -33,10 +33,10 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 	Node* n;
 	for (unsigned int i = 0; i < height; i++) {
 		for (unsigned int j = 0; j < width; j++) {
-			n = m_Nodes + i * width + j;	// Iterate row by row, increasing in height
+			n = m_Nodes + i * width + j;	// Pointer arithmetic: iterate row by row, increasing in height 
 			n->xIndex = j;
 			n->yIndex = i;
-			if (j % 2 == 0)
+			if (i % 2 == 0)
 				n->type = 0;
 			else
 				n->type = 1;
@@ -50,10 +50,13 @@ void Maze::Iterate()
 	float nodeWidth = (float)DEFAULT_NATIVE_RESOLUTION_WIDTH / (float)m_Width;	// In pixels
 	float nodeHeight = (float)DEFAULT_NATIVE_RESOLUTION_HEIGHT / (float)m_Height;	// In pixels
 
+	std::vector<float> vertexDataBuffer;
+	std::vector<unsigned int> indexBuffer;
+
 	Node* n;
 	for (unsigned int i = 0; i < m_Height; i++) {
 		for (unsigned int j = 0; j < m_Width; j++) {
-			n = m_Nodes + i * m_Height + j;
+			n = m_Nodes + i * m_Width + j;	// Pointer arithmetic: iterate row by row, increasing in height 
 			
 			/* build rectangle at this node and add to positionBuffer */
 			std::vector<std::pair<float, float>> rectVertices;
@@ -65,21 +68,24 @@ void Maze::Iterate()
 			rectVertices.push_back(botRight);
 			rectVertices.push_back(topRight);
 			rectVertices.push_back(topLeft);
-			Polygon rectangle(rectVertices);
-			AddShape(&m_VertexDataBuffer, &m_IndexBuffer, rectangle, true);
-			//std::cout << i * nodeWidth << std::endl;
-			//std::cout << topRight.first << std::endl;
+
+			std::array <float, 4> RGBA;
+			if (n->type == 0)
+				RGBA = { 0.0,0.0,0.0,0.0 };
+			else
+				RGBA = { 1.0,0.0,0.0,0.0 };
+			Polygon rectangle(rectVertices, RGBA);
+			AddShape(&vertexDataBuffer, &indexBuffer, rectangle, true);
 		}
 	}
 
 	/* Reassign buffers */
-	m_VbPtr = new VertexBuffer(&m_VertexDataBuffer[0], m_VertexDataBuffer.size() * sizeof(float));
+	m_VbPtr = new VertexBuffer(&vertexDataBuffer[0], vertexDataBuffer.size() * sizeof(float));
 	m_VaPtr = new VertexArray();
 	m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
-	m_IbPtr = new IndexBuffer(&m_IndexBuffer[0], m_IndexBuffer.size());
+	m_IbPtr = new IndexBuffer(&indexBuffer[0], indexBuffer.size());
 	m_ShaderPtr = new Shader("res/shaders/Maze.shader");
 	m_ShaderPtr->Bind();
-	//m_ShaderPtr->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 }
 
 Maze::Node* Maze::FindNextNode(Node* currNode)

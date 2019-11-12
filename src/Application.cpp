@@ -150,6 +150,7 @@ void testMazeGeneration(GLFWwindow* window) {
 
 	Renderer renderer;
 	Maze maze = Maze(16, 9, 0, 0);
+	//Maze maze = Maze(4, 3, 0, 0);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -157,8 +158,7 @@ void testMazeGeneration(GLFWwindow* window) {
 		/* Render here */
 		renderer.Clear();
 
-		// The Goal:
-		//wait for some input or automatically start on first loop
+		// Iterate maze generation each loop and draw
 		maze.Iterate();
 		renderer.Draw(&maze);
 
