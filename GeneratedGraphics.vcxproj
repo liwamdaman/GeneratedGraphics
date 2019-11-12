@@ -35,6 +35,7 @@
     <None Include="res\Shaders\Maze.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ColourValues.h" />
     <ClInclude Include="src\FractalTree.h" />
     <ClInclude Include="src\Graphic.h" />
     <ClInclude Include="src\IndexBuffer.h" />

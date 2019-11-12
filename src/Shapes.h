@@ -4,7 +4,7 @@
 #include <vector>
 #include <array>
 
-#define DEFAULT_COLOUR { 1.0f, 0.1f, 0.1f, 1.0f }	// Red
+#include "ColourValues.h"
 
 class Shape
 {

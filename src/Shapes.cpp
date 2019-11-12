@@ -82,6 +82,6 @@ Polygon::Polygon(std::vector<std::pair<float, float>> vertices, std::array <floa
 	}
 }
 
-Polygon::Polygon(std::vector<std::pair<float, float>> vertices) : Polygon(vertices, DEFAULT_COLOUR)
+Polygon::Polygon(std::vector<std::pair<float, float>> vertices) : Polygon(vertices, RED)	// Red is the default for now
 {
 }

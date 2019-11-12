@@ -14,11 +14,10 @@ Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigne
 	SetupGrid(width, height);
 
 	// Setup start point/node
-	Node* startNode = m_Nodes + (startY * height + startX) * sizeof(Node);
+	m_StartNode = m_Nodes + startY * width + startX;	// Pointer arithmetic, don't need to multiply by sizeof(Node)
 
 	m_Layout.Push<float>(2);	// x and y position
 	m_Layout.Push<float>(4);	// RGBA colour value
-
 }
 
 Maze::Maze() : Maze(32, 18, 0, 0)
@@ -28,7 +27,7 @@ Maze::Maze() : Maze(32, 18, 0, 0)
 void Maze::SetupGrid(unsigned int width, unsigned int height)
 {
 	m_Nodes = (Node*)malloc(width * height * sizeof(Node)); // Ignore this red underline, I think its a VS bug:https://github.com/Microsoft/vscode-cpptools/issues/3212
-	if (m_Nodes == NULL) printf("Uh oh");
+	if (m_Nodes == NULL) printf("Uh oh\n");
 
 	Node* n;
 	for (unsigned int i = 0; i < height; i++) {
@@ -36,19 +35,40 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 			n = m_Nodes + i * width + j;	// Pointer arithmetic: iterate row by row, increasing in height 
 			n->xIndex = j;
 			n->yIndex = i;
-			if (i % 2 == 0)
-				n->type = 0;
-			else
-				n->type = 1;
+			n->type = 0;
 			n->dirs = 15;
 		}
 	}
 }
 
-void Maze::Iterate()
+// Iterate maze generation algorithm, and update for next draw
+// Returns: 0 - ok, -1 - error, 1 - complete
+int Maze::Iterate()
 {
 	float nodeWidth = (float)DEFAULT_NATIVE_RESOLUTION_WIDTH / (float)m_Width;	// In pixels
 	float nodeHeight = (float)DEFAULT_NATIVE_RESOLUTION_HEIGHT / (float)m_Height;	// In pixels
+
+	/* Determine next node to visit and mutate*/
+	if (m_PathStack.empty()) {
+		m_StartNode->type = 1;
+		m_PathStack.push(m_StartNode);
+	}
+	//else {
+	//	Node* nextNode = FindNextNode(m_PathStack.top());
+	//	if (nextNode == NULL) {
+	//		printf("ERROR: Failed to find next node\n");
+	//		return -1;
+	//	}
+	//	if (nextNode == m_PathStack.top()) {
+	//		// Cannot dig furthur, need to backtrack
+	//		nextNode->type = 2;
+	//		m_PathStack.pop();
+	//	}
+	//	else {
+	//		nextNode->type = 1;
+	//		m_PathStack.push(nextNode);
+	//	}
+	//}
 
 	std::vector<float> vertexDataBuffer;
 	std::vector<unsigned int> indexBuffer;
@@ -71,9 +91,15 @@ void Maze::Iterate()
 
 			std::array <float, 4> RGBA;
 			if (n->type == 0)
-				RGBA = { 0.0,0.0,0.0,0.0 };
-			else
-				RGBA = { 1.0,0.0,0.0,0.0 };
+				RGBA = BLACK;
+			else if (n->type == 1)
+				RGBA = WHITE;
+			else if (n->type == 2)
+				RGBA = BLUE;
+			else {
+				printf("ERROR: Invalid node type\n");
+				return -1;
+			}
 			Polygon rectangle(rectVertices, RGBA);
 			AddShape(&vertexDataBuffer, &indexBuffer, rectangle, true);
 		}
@@ -86,9 +112,16 @@ void Maze::Iterate()
 	m_IbPtr = new IndexBuffer(&indexBuffer[0], indexBuffer.size());
 	m_ShaderPtr = new Shader("res/shaders/Maze.shader");
 	m_ShaderPtr->Bind();
+
+	return 0;
 }
 
 Maze::Node* Maze::FindNextNode(Node* currNode)
 {
-	return nullptr;
+	if (currNode == NULL) return NULL;
+
+	while (currNode->dirs) {
+
+	}
+
 }

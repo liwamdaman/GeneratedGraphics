@@ -149,7 +149,7 @@ void testFractalTree(GLFWwindow* window) {
 void testMazeGeneration(GLFWwindow* window) {
 
 	Renderer renderer;
-	Maze maze = Maze(16, 9, 0, 0);
+	Maze maze = Maze(16, 9, 1, 1);
 	//Maze maze = Maze(4, 3, 0, 0);
 
 	/* Loop until the user closes the window */
