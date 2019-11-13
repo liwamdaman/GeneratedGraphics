@@ -9,8 +9,10 @@
 #define MAX_HEIGHT 270
 
 typedef enum {
-
-};
+	EMPTY_OR_WALL,
+	CROSSED_ONCE,
+	BACKTRACKED
+} NodeState;
 
 class Maze : public Graphic
 {
@@ -19,7 +21,7 @@ private:
 	{
 		int xIndex, yIndex;
 		//struct Node* parent;	//Pointer to parent node - Backtracking can be done using parent pointer or using a stack
-		char type;	// 0 - blank/wall, 1 - have gone over once, 2 - have backtracked over, map these to colours using an enum later
+		char state;	// 0 - blank/wall, 1 - have gone over once, 2 - have backtracked over
 		char dirs;	// bitmap for directions that still haven't been explored - bits 0-3 represent availability for right, down, left, and up respectively
 	} Node;
 

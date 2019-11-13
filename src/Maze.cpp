@@ -35,7 +35,7 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 			n = m_Nodes + i * width + j;	// Pointer arithmetic: iterate row by row, increasing in height 
 			n->xIndex = j;
 			n->yIndex = i;
-			n->type = 0;
+			n->state = 0;
 			n->dirs = 15;
 		}
 	}
@@ -50,7 +50,7 @@ int Maze::Iterate()
 
 	/* Determine next node to visit and mutate*/
 	if (m_PathStack.empty()) {
-		m_StartNode->type = 1;
+		m_StartNode->state = 1;
 		m_PathStack.push(m_StartNode);
 	}
 	//else {
@@ -61,11 +61,11 @@ int Maze::Iterate()
 	//	}
 	//	if (nextNode == m_PathStack.top()) {
 	//		// Cannot dig furthur, need to backtrack
-	//		nextNode->type = 2;
+	//		nextNode->state = 2;
 	//		m_PathStack.pop();
 	//	}
 	//	else {
-	//		nextNode->type = 1;
+	//		nextNode->state = 1;
 	//		m_PathStack.push(nextNode);
 	//	}
 	//}
@@ -90,14 +90,14 @@ int Maze::Iterate()
 			rectVertices.push_back(topLeft);
 
 			std::array <float, 4> RGBA;
-			if (n->type == 0)
+			if (n->state == EMPTY_OR_WALL)
 				RGBA = BLACK;
-			else if (n->type == 1)
+			else if (n->state == CROSSED_ONCE)
 				RGBA = WHITE;
-			else if (n->type == 2)
+			else if (n->state == BACKTRACKED)
 				RGBA = BLUE;
 			else {
-				printf("ERROR: Invalid node type\n");
+				printf("ERROR: Invalid node state\n");
 				return -1;
 			}
 			Polygon rectangle(rectVertices, RGBA);
