@@ -36,7 +36,13 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 			n->xIndex = j;
 			n->yIndex = i;
 			n->state = 0;
-			n->dirs = 15;
+
+			// TODO: edge nodes should not have all directions available
+			n->dirs = 0b1111;
+			if (n->xIndex == 0) n->dirs &= ~0b0100;
+			if (n->xIndex == width - 1) n->dirs &= ~0b01;
+			if (n->yIndex == 0) n->dirs &= ~0b10;
+			if (n->yIndex == height - 1) n->dirs &= ~0b1000;
 		}
 	}
 }
@@ -53,22 +59,22 @@ int Maze::Iterate()
 		m_StartNode->state = 1;
 		m_PathStack.push(m_StartNode);
 	}
-	//else {
-	//	Node* nextNode = FindNextNode(m_PathStack.top());
-	//	if (nextNode == NULL) {
-	//		printf("ERROR: Failed to find next node\n");
-	//		return -1;
-	//	}
-	//	if (nextNode == m_PathStack.top()) {
-	//		// Cannot dig furthur, need to backtrack
-	//		nextNode->state = 2;
-	//		m_PathStack.pop();
-	//	}
-	//	else {
-	//		nextNode->state = 1;
-	//		m_PathStack.push(nextNode);
-	//	}
-	//}
+	else {
+		Node* nextNode = FindNextNode(m_PathStack.top());
+		if (nextNode == NULL) {
+			printf("ERROR: Failed to find next node\n");
+			return -1;
+		}
+		if (nextNode == m_PathStack.top()) {
+			// Cannot dig furthur, need to backtrack
+			nextNode->state = 2;
+			m_PathStack.pop();
+		}
+		else {
+			nextNode->state = 1;
+			m_PathStack.push(nextNode);
+		}
+	}
 
 	std::vector<float> vertexDataBuffer;
 	std::vector<unsigned int> indexBuffer;
@@ -90,7 +96,7 @@ int Maze::Iterate()
 			rectVertices.push_back(topLeft);
 
 			std::array <float, 4> RGBA;
-			if (n->state == EMPTY_OR_WALL)
+			if (n->state == EMPTY)
 				RGBA = BLACK;
 			else if (n->state == CROSSED_ONCE)
 				RGBA = WHITE;
@@ -120,8 +126,69 @@ Maze::Node* Maze::FindNextNode(Node* currNode)
 {
 	if (currNode == NULL) return NULL;
 
-	while (currNode->dirs) {
+	char dir;
+	Node* nextNode = currNode;
 
+	// While directions unexplored
+	while (currNode->dirs) {
+		// Randomly pick direction
+		dir = 1 << (rand() % 4);
+
+		// If it has already been explored - try again
+		if (!(currNode->dirs & dir)) continue;
+
+		currNode->dirs &= ~dir;
+
+		Node* n;
+		switch (dir) {
+
+			case 1: 
+				n = currNode + 1;
+				break;
+			case 2:
+				n = currNode - m_Width;
+				break;
+			case 4:
+				n = currNode - 1;
+				break;
+			case 8:
+				n = currNode + m_Width;
+				break;
+			default: 
+				printf("ERROR: invalid value for direction\n");
+				n = currNode;
+		}
+
+		/* Check if this node is appropriate to go to next or not */
+		if (n == NULL) {
+			printf("ERROR: null ptr\n");
+			continue;
+		}
+		if (n->state != EMPTY) continue;
+		if (TouchingAnyOtherNodes(n, dir)) continue;
+		nextNode = n;
+		return nextNode;
 	}
 
+	// Have explored all possible paths with no success, we are at a dead end
+	return currNode;
+}
+
+bool Maze::TouchingAnyOtherNodes(Node *currNode, char directionFromParent)
+{
+	// Note: the node is allowed to touch its parent node
+	if (currNode->xIndex != m_Width - 1)
+		if ((currNode + 1)->state != EMPTY && directionFromParent != 0b0100)
+			return true;
+	if (currNode->yIndex != 0)
+		if ((currNode - m_Width)->state != EMPTY && directionFromParent != 0b1000)
+			return true;
+	if (currNode->xIndex != 0)
+		if ((currNode - 1)->state != EMPTY && directionFromParent != 0b01)
+			return true;
+	if (currNode->yIndex != m_Height - 1)
+		if ((currNode + m_Width)->state != EMPTY && directionFromParent != 0b10)
+			return true;
+
+	return false;
 }

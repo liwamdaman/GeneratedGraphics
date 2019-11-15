@@ -9,7 +9,7 @@
 #define MAX_HEIGHT 270
 
 typedef enum {
-	EMPTY_OR_WALL,
+	EMPTY,
 	CROSSED_ONCE,
 	BACKTRACKED
 } NodeState;
@@ -39,4 +39,5 @@ public:
 private:
 	void SetupGrid(unsigned int width, unsigned int height);
 	Node* FindNextNode(Node* currNode);
+	bool TouchingAnyOtherNodes(Node* currNode, char directionApproachedFrom);
 };

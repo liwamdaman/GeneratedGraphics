@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <chrono>
+#include <ctime>
 
 #include "Renderer.h"
 #include "VertexBuffer.h"
@@ -152,22 +154,65 @@ void testMazeGeneration(GLFWwindow* window) {
 	Maze maze = Maze(16, 9, 1, 1);
 	//Maze maze = Maze(4, 3, 0, 0);
 
+	//Seed random generator
+	srand(time(NULL));
+
+	clock_t start = clock();
+	const double iterationTimePeriod = 0.0;	// Seconds
+	bool mazeGenStarted = false;
+	bool mazGenFinished = false;
+	int i = 0;
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
 		renderer.Clear();
 
-		// Iterate maze generation each loop and draw
-		maze.Iterate();
-		renderer.Draw(&maze);
+		if (!mazGenFinished && (clock() - start) / CLOCKS_PER_SEC > iterationTimePeriod) {
+			// Reset start time
+			start = clock();
+
+			// Iterate maze generation
+			i = maze.Iterate();
+			if (!mazeGenStarted) mazeGenStarted = true;
+			if (i == 1) mazGenFinished = true;
+		}
+		else
+			printf("huh\n");
+		
+		if(mazeGenStarted)
+			renderer.Draw(&maze);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
 		/* Poll for and process events */
 		glfwPollEvents();
-
-		//std::cin.ignore();
 	}
 }
+
+//void testMazeGeneration(GLFWwindow* window) {
+//
+//	Renderer renderer;
+//	Maze maze = Maze(16, 9, 1, 1);
+//	//Maze maze = Maze(4, 3, 0, 0);
+//
+//	/* Loop until the user closes the window */
+//	while (!glfwWindowShouldClose(window))
+//	{
+//		/* Render here */
+//		renderer.Clear();
+//
+//		// Iterate maze generation each loop and draw
+//		maze.Iterate();
+//		renderer.Draw(&maze);
+//
+//		/* Swap front and back buffers */
+//		glfwSwapBuffers(window);
+//
+//		/* Poll for and process events */
+//		glfwPollEvents();
+//
+//		//std::cin.ignore();
+//	}
+//}
