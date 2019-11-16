@@ -6,7 +6,6 @@
 #include <string>
 #include <sstream>
 #include <chrono>
-#include <ctime>
 
 #include "Renderer.h"
 #include "VertexBuffer.h"
@@ -151,14 +150,13 @@ void testFractalTree(GLFWwindow* window) {
 void testMazeGeneration(GLFWwindow* window) {
 
 	Renderer renderer;
-	Maze maze = Maze(16, 9, 1, 1);
-	//Maze maze = Maze(4, 3, 0, 0);
+	Maze maze = Maze(48, 27, 40, 20);
 
 	//Seed random generator
 	srand(time(NULL));
 
-	clock_t start = clock();
-	const double iterationTimePeriod = 0.0;	// Seconds
+	auto start = std::chrono::high_resolution_clock::now();
+	const std::chrono::milliseconds iterationTimePeriod(10);
 	bool mazeGenStarted = false;
 	bool mazGenFinished = false;
 	int i = 0;
@@ -168,17 +166,16 @@ void testMazeGeneration(GLFWwindow* window) {
 		/* Render here */
 		renderer.Clear();
 
-		if (!mazGenFinished && (clock() - start) / CLOCKS_PER_SEC > iterationTimePeriod) {
+		if (!mazGenFinished && 
+			std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start) > iterationTimePeriod) {
 			// Reset start time
-			start = clock();
+			start = std::chrono::high_resolution_clock::now();
 
 			// Iterate maze generation
 			i = maze.Iterate();
 			if (!mazeGenStarted) mazeGenStarted = true;
 			if (i == 1) mazGenFinished = true;
 		}
-		else
-			printf("huh\n");
 		
 		if(mazeGenStarted)
 			renderer.Draw(&maze);
@@ -190,29 +187,3 @@ void testMazeGeneration(GLFWwindow* window) {
 		glfwPollEvents();
 	}
 }
-
-//void testMazeGeneration(GLFWwindow* window) {
-//
-//	Renderer renderer;
-//	Maze maze = Maze(16, 9, 1, 1);
-//	//Maze maze = Maze(4, 3, 0, 0);
-//
-//	/* Loop until the user closes the window */
-//	while (!glfwWindowShouldClose(window))
-//	{
-//		/* Render here */
-//		renderer.Clear();
-//
-//		// Iterate maze generation each loop and draw
-//		maze.Iterate();
-//		renderer.Draw(&maze);
-//
-//		/* Swap front and back buffers */
-//		glfwSwapBuffers(window);
-//
-//		/* Poll for and process events */
-//		glfwPollEvents();
-//
-//		//std::cin.ignore();
-//	}
-//}

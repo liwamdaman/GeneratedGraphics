@@ -65,6 +65,8 @@ int Maze::Iterate()
 			printf("ERROR: Failed to find next node\n");
 			return -1;
 		}
+		if (nextNode == m_StartNode)
+			return 1;
 		if (nextNode == m_PathStack.top()) {
 			// Cannot dig furthur, need to backtrack
 			nextNode->state = 2;
@@ -118,6 +120,10 @@ int Maze::Iterate()
 	m_IbPtr = new IndexBuffer(&indexBuffer[0], indexBuffer.size());
 	m_ShaderPtr = new Shader("res/shaders/Maze.shader");
 	m_ShaderPtr->Bind();
+
+	// TODO: OPTIMIZE THIS, it's way too slow when we use a larger grid
+	// possible strategy: instead of looping through every single node and creating a new vertex buffer everytime iterate() is called,
+	// try persisting the vertexDataBuffer and only mutating the specific array elements containing the colour values of the node to be changed
 
 	return 0;
 }
