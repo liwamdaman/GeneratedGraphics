@@ -150,7 +150,7 @@ void testFractalTree(GLFWwindow* window) {
 void testMazeGeneration(GLFWwindow* window) {
 
 	Renderer renderer;
-	Maze maze = Maze(48, 27, 40, 20);
+	Maze maze = Maze(32, 18, 10, 10);
 
 	//Seed random generator
 	srand(time(NULL));

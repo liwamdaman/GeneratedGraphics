@@ -103,7 +103,7 @@ int Maze::Iterate()
 			else if (n->state == CROSSED_ONCE)
 				RGBA = WHITE;
 			else if (n->state == BACKTRACKED)
-				RGBA = BLUE;
+				RGBA = LIGHT_BLUE;
 			else {
 				printf("ERROR: Invalid node state\n");
 				return -1;
