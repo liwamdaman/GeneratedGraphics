@@ -9,3 +9,4 @@
 #define BLUE { 0.0, 0.0, 1.0, 1.0 }
 
 #define LIGHT_BLUE { 0.0, 0.8633, 1.0, 1.0 }
+#define ORANGE { 1.0, 0.588, 0.196, 1.0 }
