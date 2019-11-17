@@ -105,7 +105,7 @@ int Maze::Iterate()
 			m_VaPtr = new VertexArray();
 			m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
 			m_IbPtr = new IndexBuffer(&m_IndexBuffer[0], m_IndexBuffer.size());
-			m_ShaderPtr = new Shader("res/shaders/Maze.shader");
+			m_ShaderPtr = new Shader("res/shaders/Colour.shader");
 			m_ShaderPtr->Bind();
 
 			return 1;
@@ -138,7 +138,7 @@ int Maze::Iterate()
 	m_VaPtr = new VertexArray();
 	m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
 	m_IbPtr = new IndexBuffer(&m_IndexBuffer[0], m_IndexBuffer.size());
-	m_ShaderPtr = new Shader("res/shaders/Maze.shader");
+	m_ShaderPtr = new Shader("res/shaders/Colour.shader");
 	m_ShaderPtr->Bind();
 
 	return 0;
@@ -198,6 +198,11 @@ Maze::Node* Maze::FindNextNode(Node* currNode)
 
 bool Maze::TouchingAnyOtherNodes(Node *currNode, char directionFromParent)
 {
+	if (currNode == NULL) {
+		printf("ERROR: null ptr\n");
+		return true;
+	}
+
 	// Note: the node is allowed to touch its parent node
 	if (currNode->xIndex != m_Width - 1 && directionFromParent != 0b0100)
 		if ((currNode + 1)->state != EMPTY)	// right

@@ -10,7 +10,6 @@ void main()
 {
 	gl_Position = vec4(position, 0.0, 1.0);
 	ourColor = color;
-	//ourColor = vec4(0.8f, 0.3f, 0.8f, 1.0f);
 };
 
 #shader fragment

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\CyclicCA.cpp" />
     <ClCompile Include="src\FractalTree.cpp" />
     <ClCompile Include="src\Graphic.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
@@ -32,10 +33,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Basic.shader" />
-    <None Include="res\Shaders\Maze.shader" />
+    <None Include="res\Shaders\Colour.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ColourValues.h" />
+    <ClInclude Include="src\CyclicCA.h" />
     <ClInclude Include="src\FractalTree.h" />
     <ClInclude Include="src\Graphic.h" />
     <ClInclude Include="src\IndexBuffer.h" />

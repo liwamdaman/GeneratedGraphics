@@ -16,10 +16,12 @@
 
 #include "FractalTree.h"
 #include "Maze.h"
+#include "CyclicCA.h"
 
 void testBasic(GLFWwindow* window);
 void testFractalTree(GLFWwindow* window);
 void testMazeGeneration(GLFWwindow* window);
+void testCyclicCellularAutomation(GLFWwindow* window);
 
 int main(void)
 {
@@ -51,7 +53,10 @@ int main(void)
 	GLCall(std::cout << glGetString(GL_VERSION) << std::endl);
 
 	/* CALL TEST HERE */
-	testMazeGeneration(window);
+	//testBasic(window);
+	//testFractalTree(window);
+	//testMazeGeneration(window);
+	testCyclicCellularAutomation(window);
 
 
 	glfwTerminate();
@@ -181,6 +186,43 @@ void testMazeGeneration(GLFWwindow* window) {
 		
 		if(mazeGenStarted)
 			renderer.Draw(&maze);
+
+		/* Swap front and back buffers */
+		glfwSwapBuffers(window);
+
+		/* Poll for and process events */
+		glfwPollEvents();
+	}
+}
+
+void testCyclicCellularAutomation(GLFWwindow* window) {
+
+	Renderer renderer;
+	CyclicCA rule313 = CyclicCA();	// Default constructor builds rule 313 by David Griffeath
+
+	//Seed random generator
+	srand(time(NULL));
+
+	auto start = std::chrono::high_resolution_clock::now();
+	const std::chrono::milliseconds iterationTimePeriod(100);
+	bool mazeGenStarted = false;
+	/* Loop until the user closes the window */
+	while (!glfwWindowShouldClose(window))
+	{
+		/* Render here */
+		renderer.Clear();
+
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start) > iterationTimePeriod) {
+			// Reset start time
+			start = std::chrono::high_resolution_clock::now();
+
+			// Iterate maze generation
+			rule313.Iterate();
+			if (!mazeGenStarted) mazeGenStarted = true;
+		}
+
+		if (mazeGenStarted)
+			renderer.Draw(&rule313);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

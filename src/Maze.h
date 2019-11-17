@@ -4,7 +4,7 @@
 #include <string>
 #include <stack>
 
-/* Define a max resolution of 80 x 45*/
+/* Define a max resolution of 160 x 90*/
 #define MAX_WIDTH 160
 #define MAX_HEIGHT 90
 #define NUM_VERTICES_PER_NODE 4

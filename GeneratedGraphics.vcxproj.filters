@@ -45,10 +45,13 @@
     <ClCompile Include="src\Maze.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\CyclicCA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Basic.shader" />
-    <None Include="res\Shaders\Maze.shader" />
+    <None Include="res\Shaders\Colour.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -82,6 +85,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ColourValues.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CyclicCA.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
