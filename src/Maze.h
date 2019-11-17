@@ -41,4 +41,5 @@ private:
 	void SetupGrid(unsigned int width, unsigned int height);
 	Node* FindNextNode(Node* currNode);
 	bool TouchingAnyOtherNodes(Node* currNode, char directionApproachedFrom);
+	void ColourNode(std::vector<float>* vertexDataBufferPtr, Node* n, std::array <float, 4> RGBA);
 };

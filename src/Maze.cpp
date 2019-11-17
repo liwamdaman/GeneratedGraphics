@@ -222,3 +222,7 @@ bool Maze::TouchingAnyOtherNodes(Node *currNode, char directionFromParent)
 
 	return false;
 }
+
+void Maze::ColourNode(std::vector<float>* vertexDataBufferPtr, Node* n, std::array<float, 4> RGBA)
+{
+}
