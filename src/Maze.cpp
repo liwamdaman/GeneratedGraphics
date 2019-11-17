@@ -2,10 +2,13 @@
 #include <iostream>
 
 
-Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigned int startY)
+Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigned int startY, bool isWacky)
 {
 	if (width > MAX_WIDTH) width = MAX_WIDTH;
 	if (height > MAX_HEIGHT) height = MAX_HEIGHT;
+
+	if (startX >= width) startX = width - 1;
+	if (startY >= height) startY = height - 1;
 
 	// Setup grid
 	m_Width = width;
@@ -18,9 +21,14 @@ Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigne
 
 	m_Layout.Push<float>(2);	// x and y position
 	m_Layout.Push<float>(4);	// RGBA colour value
+
+	if (isWacky)
+		m_IsWacky = true;
+	else
+		m_IsWacky = false;
 }
 
-Maze::Maze() : Maze(32, 18, 0, 0)
+Maze::Maze() : Maze(16, 9, 0, 0, false)
 {
 }
 
@@ -183,18 +191,34 @@ Maze::Node* Maze::FindNextNode(Node* currNode)
 bool Maze::TouchingAnyOtherNodes(Node *currNode, char directionFromParent)
 {
 	// Note: the node is allowed to touch its parent node
-	if (currNode->xIndex != m_Width - 1)
-		if ((currNode + 1)->state != EMPTY && directionFromParent != 0b0100)
+	if (currNode->xIndex != m_Width - 1 && directionFromParent != 0b0100)
+		if ((currNode + 1)->state != EMPTY)	// right
 			return true;
-	if (currNode->yIndex != 0)
-		if ((currNode - m_Width)->state != EMPTY && directionFromParent != 0b1000)
+	if (currNode->yIndex != 0 && directionFromParent != 0b1000)
+		if ((currNode - m_Width)->state != EMPTY)	// down
 			return true;
-	if (currNode->xIndex != 0)
-		if ((currNode - 1)->state != EMPTY && directionFromParent != 0b01)
+	if (currNode->xIndex != 0 && directionFromParent != 0b01)
+		if ((currNode - 1)->state != EMPTY)	// left
 			return true;
-	if (currNode->yIndex != m_Height - 1)
-		if ((currNode + m_Width)->state != EMPTY && directionFromParent != 0b10)
+	if (currNode->yIndex != m_Height - 1 && directionFromParent != 0b10)
+		if ((currNode + m_Width)->state != EMPTY)	// up
 			return true;
+
+	if (!m_IsWacky) {
+		/* Apply more restrictions */
+		if (currNode->xIndex != m_Width - 1 && currNode->yIndex != m_Height - 1 && directionFromParent != 0b0100 && directionFromParent != 0b0010)
+			if((currNode + m_Width + 1)->state != EMPTY)	// top-right
+				return true;
+		if (currNode->xIndex != m_Width - 1 && currNode->yIndex != 0 && directionFromParent != 0b0100 && directionFromParent != 0b1000)
+			if ((currNode - m_Width + 1)->state != EMPTY)	// bot-right
+				return true;
+		if (currNode->xIndex != 0 && currNode->yIndex != 0 && directionFromParent != 0b0001 && directionFromParent != 0b1000)
+			if ((currNode - m_Width - 1)->state != EMPTY)	// bot-left
+				return true;
+		if (currNode->xIndex != 0 && currNode->yIndex != m_Height - 1 && directionFromParent != 0b0001 && directionFromParent != 0b0010)
+			if ((currNode + m_Width - 1)->state != EMPTY)	// top-left
+				return true;
+	}
 
 	return false;
 }

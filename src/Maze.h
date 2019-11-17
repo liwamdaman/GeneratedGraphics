@@ -4,9 +4,9 @@
 #include <string>
 #include <stack>
 
-/* Define a max resolution of 480 x 270*/
-#define MAX_WIDTH 480
-#define MAX_HEIGHT 270
+/* Define a max resolution of 80 x 45*/
+#define MAX_WIDTH 80
+#define MAX_HEIGHT 45
 
 typedef enum {
 	EMPTY,
@@ -31,8 +31,9 @@ private:
 
 	Node* m_StartNode;
 	VertexBufferLayout m_Layout;
+	bool m_IsWacky;
 public:
-	Maze(unsigned int width, unsigned int height, unsigned int startX, unsigned int startY);
+	Maze(unsigned int width, unsigned int height, unsigned int startX, unsigned int startY, bool isWacky);	// turning on isWacky will generate the maze in a less visually organized manner
 	Maze();
 
 	int Iterate();	// Finds next node, and updates buffers
