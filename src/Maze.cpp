@@ -97,6 +97,10 @@ int Maze::Iterate()
 			ColourNode(&m_VertexDataBuffer, endNode, ORANGE);
 
 			/* Reassign buffers */
+			delete m_VbPtr;
+			delete m_VaPtr;
+			delete m_IbPtr;
+			delete m_ShaderPtr;
 			m_VbPtr = new VertexBuffer(&m_VertexDataBuffer[0], m_VertexDataBuffer.size() * sizeof(float));
 			m_VaPtr = new VertexArray();
 			m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
@@ -126,6 +130,10 @@ int Maze::Iterate()
 	}
 
 	/* Reassign buffers */
+	delete m_VbPtr;
+	delete m_VaPtr;
+	delete m_IbPtr;
+	delete m_ShaderPtr;
 	m_VbPtr = new VertexBuffer(&m_VertexDataBuffer[0], m_VertexDataBuffer.size() * sizeof(float));
 	m_VaPtr = new VertexArray();
 	m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);

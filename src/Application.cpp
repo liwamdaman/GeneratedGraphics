@@ -152,7 +152,7 @@ void testMazeGeneration(GLFWwindow* window) {
 	Renderer renderer;
 	//Maze maze = Maze(16, 9, 8, 5, false);
 	//Maze maze = Maze(32, 18, 10, 10, false);
-	Maze maze = Maze(96, 54, 48, 0, false);
+	Maze maze = Maze(128, 72, 0, 36, false);
 	
 	//Seed random generator
 	srand(time(NULL));

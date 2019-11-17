@@ -5,8 +5,8 @@
 #include <stack>
 
 /* Define a max resolution of 80 x 45*/
-#define MAX_WIDTH 80
-#define MAX_HEIGHT 45
+#define MAX_WIDTH 160
+#define MAX_HEIGHT 90
 #define NUM_VERTICES_PER_NODE 4
 
 typedef enum {
