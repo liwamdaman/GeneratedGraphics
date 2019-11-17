@@ -20,7 +20,7 @@ Maze::Maze(unsigned int width, unsigned int height, unsigned int startX, unsigne
 	m_StartNode = m_Nodes + startY * width + startX;	// Pointer arithmetic, don't need to multiply by sizeof(Node)
 
 	m_Layout.Push<float>(2);	// x and y position
-	m_Layout.Push<float>(4);	// RGBA colour value
+	m_Layout.Push<float>(Shape::colourVectorLength);	// RGBA colour value
 
 	if (isWacky)
 		m_IsWacky = true;
@@ -37,6 +37,9 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 	m_Nodes = (Node*)malloc(width * height * sizeof(Node)); // Ignore this red underline, I think its a VS bug:https://github.com/Microsoft/vscode-cpptools/issues/3212
 	if (m_Nodes == NULL) printf("Uh oh\n");
 
+	float nodeWidth = (float)DEFAULT_NATIVE_RESOLUTION_WIDTH / (float)m_Width;	// In pixels
+	float nodeHeight = (float)DEFAULT_NATIVE_RESOLUTION_HEIGHT / (float)m_Height;	// In pixels
+
 	Node* n;
 	for (unsigned int i = 0; i < height; i++) {
 		for (unsigned int j = 0; j < width; j++) {
@@ -45,112 +48,14 @@ void Maze::SetupGrid(unsigned int width, unsigned int height)
 			n->yIndex = i;
 			n->state = 0;
 
-			// TODO: edge nodes should not have all directions available
+			// Edge nodes should not have all directions available
 			n->dirs = 0b1111;
 			if (n->xIndex == 0) n->dirs &= ~0b0100;
 			if (n->xIndex == width - 1) n->dirs &= ~0b01;
 			if (n->yIndex == 0) n->dirs &= ~0b10;
 			if (n->yIndex == height - 1) n->dirs &= ~0b1000;
-		}
-	}
-}
 
-// Iterate maze generation algorithm, and update for next draw
-// Returns: 0 - ok, -1 - error, 1 - complete
-int Maze::Iterate()
-{
-	float nodeWidth = (float)DEFAULT_NATIVE_RESOLUTION_WIDTH / (float)m_Width;	// In pixels
-	float nodeHeight = (float)DEFAULT_NATIVE_RESOLUTION_HEIGHT / (float)m_Height;	// In pixels
-
-	static unsigned int maxDepth = 0;
-	static Node *endNode = NULL;
-
-	/* Determine next node to visit and mutate*/
-	if (m_PathStack.empty()) {
-		m_StartNode->state = 1;
-		m_PathStack.push(m_StartNode);
-	}
-	else {
-		Node* nextNode = FindNextNode(m_PathStack.top());
-		if (nextNode == NULL) {
-			printf("ERROR: Failed to find next node\n");
-			return -1;
-		}
-		if (nextNode == m_StartNode) {
-			/* Maze generation complete - colour the endNode */
-			std::vector<float> vertexDataBuffer;
-			std::vector<unsigned int> indexBuffer;
-
-			Node* n;
-			for (unsigned int i = 0; i < m_Height; i++) {
-				for (unsigned int j = 0; j < m_Width; j++) {
-					n = m_Nodes + i * m_Width + j;	// Pointer arithmetic: iterate row by row, increasing in height 
-
-					/* build rectangle at this node and add to positionBuffer */
-					std::vector<std::pair<float, float>> rectVertices;
-					std::pair<float, float> botLeft(MapPixelCoordToScreenCoord(j * nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight, false));
-					std::pair<float, float> botRight(MapPixelCoordToScreenCoord(j * nodeWidth + nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight, false));
-					std::pair<float, float> topRight(MapPixelCoordToScreenCoord(j * nodeWidth + nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight + nodeHeight, false));
-					std::pair<float, float> topLeft(MapPixelCoordToScreenCoord(j * nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight + nodeHeight, false));
-					rectVertices.push_back(botLeft);
-					rectVertices.push_back(botRight);
-					rectVertices.push_back(topRight);
-					rectVertices.push_back(topLeft);
-
-					std::array <float, 4> RGBA;
-					if (n == endNode)
-						RGBA = ORANGE;
-					else {
-						if (n->state == EMPTY)
-							RGBA = BLACK;
-						else if (n->state == CROSSED_ONCE)
-							RGBA = WHITE;
-						else if (n->state == BACKTRACKED)
-							RGBA = LIGHT_BLUE;
-						else {
-							printf("ERROR: Invalid node state\n");
-							return -1;
-						}
-					}					
-					Polygon rectangle(rectVertices, RGBA);
-					AddShape(&vertexDataBuffer, &indexBuffer, rectangle, true);
-				}
-			}
-
-			/* Reassign buffers */
-			m_VbPtr = new VertexBuffer(&vertexDataBuffer[0], vertexDataBuffer.size() * sizeof(float));
-			m_VaPtr = new VertexArray();
-			m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
-			m_IbPtr = new IndexBuffer(&indexBuffer[0], indexBuffer.size());
-			m_ShaderPtr = new Shader("res/shaders/Maze.shader");
-			m_ShaderPtr->Bind();
-			return 1;
-		}
-		if (nextNode == m_PathStack.top()) {
-			/* Cannot dig furthur, need to backtrack - check if endNode should be updated */
-			if (m_PathStack.size() > maxDepth) {
-				maxDepth = m_PathStack.size();
-				endNode = m_PathStack.top();
-			}
-
-			nextNode->state = 2;
-			m_PathStack.pop();
-		}
-		else {
-			nextNode->state = 1;
-			m_PathStack.push(nextNode);
-		}
-	}
-
-	std::vector<float> vertexDataBuffer;
-	std::vector<unsigned int> indexBuffer;
-
-	Node* n;
-	for (unsigned int i = 0; i < m_Height; i++) {
-		for (unsigned int j = 0; j < m_Width; j++) {
-			n = m_Nodes + i * m_Width + j;	// Pointer arithmetic: iterate row by row, increasing in height 
-			
-			/* build rectangle at this node and add to positionBuffer */
+			/* build rectangle at this node */
 			std::vector<std::pair<float, float>> rectVertices;
 			std::pair<float, float> botLeft(MapPixelCoordToScreenCoord(j * nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight, false));
 			std::pair<float, float> botRight(MapPixelCoordToScreenCoord(j * nodeWidth + nodeWidth, true), MapPixelCoordToScreenCoord(i * nodeHeight, false));
@@ -161,33 +66,72 @@ int Maze::Iterate()
 			rectVertices.push_back(topRight);
 			rectVertices.push_back(topLeft);
 
-			std::array <float, 4> RGBA;
-			if (n->state == EMPTY)
-				RGBA = BLACK;
-			else if (n->state == CROSSED_ONCE)
-				RGBA = WHITE;
-			else if (n->state == BACKTRACKED)
-				RGBA = LIGHT_BLUE;
-			else {
-				printf("ERROR: Invalid node state\n");
-				return -1;
+			Polygon rectangle(rectVertices, BLACK);
+			AddShape(&m_VertexDataBuffer, &m_IndexBuffer, rectangle, true);
+		}
+	}
+}
+
+// Iterate maze generation algorithm, and update for next draw
+// Returns: 0 - ok, -1 - error, 1 - complete
+int Maze::Iterate()
+{
+	static unsigned int maxDepth = 0;
+	static Node *endNode = NULL;
+
+	if (m_PathStack.empty()) {
+		/* First iteration, colour the start node */
+		m_StartNode->state = CROSSED_ONCE;
+		ColourNode(&m_VertexDataBuffer, m_StartNode, WHITE);
+		m_PathStack.push(m_StartNode);
+	}
+	else {
+		/* Determine next node to visit and mutate*/
+		Node* nextNode = FindNextNode(m_PathStack.top());
+		if (nextNode == NULL) {
+			printf("ERROR: Failed to find next node\n");
+			return -1;
+		}
+		if (nextNode == m_StartNode) {
+			/* Maze generation complete - colour the endNode */
+			ColourNode(&m_VertexDataBuffer, endNode, ORANGE);
+
+			/* Reassign buffers */
+			m_VbPtr = new VertexBuffer(&m_VertexDataBuffer[0], m_VertexDataBuffer.size() * sizeof(float));
+			m_VaPtr = new VertexArray();
+			m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
+			m_IbPtr = new IndexBuffer(&m_IndexBuffer[0], m_IndexBuffer.size());
+			m_ShaderPtr = new Shader("res/shaders/Maze.shader");
+			m_ShaderPtr->Bind();
+
+			return 1;
+		}
+		if (nextNode == m_PathStack.top()) {
+			/* Cannot dig furthur, need to backtrack - check if endNode should be updated */
+			if (m_PathStack.size() > maxDepth) {
+				maxDepth = m_PathStack.size();
+				endNode = m_PathStack.top();
 			}
-			Polygon rectangle(rectVertices, RGBA);
-			AddShape(&vertexDataBuffer, &indexBuffer, rectangle, true);
+
+			nextNode->state = BACKTRACKED;
+			ColourNode(&m_VertexDataBuffer, nextNode, LIGHT_BLUE);
+			m_PathStack.pop();
+		}
+		else {
+			/* Continue digging further */
+			nextNode->state = CROSSED_ONCE;
+			ColourNode(&m_VertexDataBuffer, nextNode, WHITE);
+			m_PathStack.push(nextNode);
 		}
 	}
 
 	/* Reassign buffers */
-	m_VbPtr = new VertexBuffer(&vertexDataBuffer[0], vertexDataBuffer.size() * sizeof(float));
+	m_VbPtr = new VertexBuffer(&m_VertexDataBuffer[0], m_VertexDataBuffer.size() * sizeof(float));
 	m_VaPtr = new VertexArray();
 	m_VaPtr->AddBuffer(*m_VbPtr, m_Layout);
-	m_IbPtr = new IndexBuffer(&indexBuffer[0], indexBuffer.size());
+	m_IbPtr = new IndexBuffer(&m_IndexBuffer[0], m_IndexBuffer.size());
 	m_ShaderPtr = new Shader("res/shaders/Maze.shader");
 	m_ShaderPtr->Bind();
-
-	// TODO: OPTIMIZE THIS, it's way too slow when we use a larger grid
-	// possible strategy: instead of looping through every single node and creating a new vertex buffer everytime iterate() is called,
-	// try persisting the vertexDataBuffer and only mutating the specific array elements containing the colour values of the node to be changed
 
 	return 0;
 }
@@ -279,10 +223,20 @@ bool Maze::TouchingAnyOtherNodes(Node *currNode, char directionFromParent)
 	return false;
 }
 
-void Maze::ColourNode(std::vector<float>* vertexDataBufferPtr, Node* n, std::array<float, 4> RGBA)
+void Maze::ColourNode(std::vector<float>* vertexDataBufferPtr, Node* n, std::array<float, Shape::colourVectorLength> RGBA)
 {
 	if (n == NULL) {
 		printf("ERROR: null ptr\n");
 		return;
+	}
+	
+	// Each node has four vertices, and each vertex has consists of six floats in the vertex data buffer
+	unsigned int index = (n->yIndex * m_Width + n->xIndex) * 4 * 6;	// index of data buffer where this node begins
+	for (int vertex = 0; vertex < 4; vertex++) {
+		index = index + 2;
+		for (int colourValue = 0; colourValue < Shape::colourVectorLength; colourValue++) {
+			(*vertexDataBufferPtr)[index] = RGBA[colourValue];
+			index++;
+		}
 	}
 }

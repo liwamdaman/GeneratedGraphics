@@ -33,6 +33,6 @@ public:
 class Polygon : public Shape
 {
 public:
-	Polygon(std::vector<std::pair<float, float>> vertices, std::array <float, 4> RGBA);
+	Polygon(std::vector<std::pair<float, float>> vertices, std::array <float, colourVectorLength> RGBA);
 	Polygon(std::vector<std::pair<float, float>> vertices);
 };
