@@ -61,9 +61,10 @@ int Graphic::AddShape(std::vector<float> * vertexDataBufferPtr, std::vector<unsi
 
 float Graphic::MapPixelCoordToScreenCoord(unsigned int pixelCoord, bool isXCoord) const
 {
-	/* From observation, OpenGL screen goes from -1 to 1 in both x and y directions */
+	/* From observation, OpenGL screen goes from -1 to 1 in both x and y directions
+	However we want to leave some room around the edges, so use -0.95 to 0.95 in x and -0.85 to 0.85 in y */
 	if (isXCoord)
-		return (float)pixelCoord * 2 / DEFAULT_NATIVE_RESOLUTION_WIDTH - 1;
+		return (float)pixelCoord * 1.9 / DEFAULT_NATIVE_RESOLUTION_WIDTH - 0.95;
 	else
-		return (float)pixelCoord * 2 / DEFAULT_NATIVE_RESOLUTION_HEIGHT - 1;
+		return (float)pixelCoord * 1.7 / DEFAULT_NATIVE_RESOLUTION_HEIGHT - 0.85;
 }
