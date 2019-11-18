@@ -1,4 +1,4 @@
-# Generated Graphics\
+# Generated Graphics
 Algorithmically generating some cool 2D visuals while learning some modern OpenGL!
 
 **Depth-first search Maze Generation**\
