@@ -1,10 +1,23 @@
 # Generated Graphics
-something something description about project
+Algorithmically generating some cool 2D visuals while learning some modern OpenGL!
 
-**Possible Ideas:**
+**Depth-first search Maze Generation**
+Large:
+![Maze Generation Large Demo](gifs/MazeGenNonWackyLarge.gif)
+
+Small and Wacky:
+![Maze Generation Small Wacky Demo](gifs/MazeGenWackySmall.gif)
+
+**Cyclic Cellular Automation**
+Rule 313 discovered by David Griffeath:
+![Cyclic CA Demo](gifs/CyclicCA313.gif)
+
+**Fractal Tree**
+Binary branching and depth of 10:
+![FractalTree Demo](gifs/FractalTree.gif)
+
+**Possible ideas for the future:**
 -some visual demonstration of perlin noise
 -water ripples (perhaps integrate with mouse)
 -campfire burning
 -aerial view of fire propegation (perhaps integrate with mouse)
--procedurally generated maze (perhaps graphically demonstrating an algorithm)
--graphically demonstrating different cellular automata rules
